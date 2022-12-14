@@ -9,34 +9,33 @@ import java.io.IOException;
 
 public abstract class Puzzle {
 	
-	private int id;
-	
-	public Puzzle(int id) {
-		this.id = id;
+	private int day;
+
+	public Puzzle() {
+		Solution annotation = (Solution) this.getClass().getAnnotation(Solution.class);
+		if(annotation != null) this.day = annotation.day();
 	}
 	
 	public int getID() {
-		return this.id;
+		return this.day;
 	}
 	
-	protected abstract void compute(BufferedReader in, BufferedWriter out) throws IOException;
-	
-	private StringBuilder getGenericPath() {
-		int dayID = id / PuzzleMaster.PUZZLES_PER_DAY;
-		int puzzleID = id % PuzzleMaster.PUZZLES_PER_DAY;
-		
-		StringBuilder path = new StringBuilder();
-		path.append("src/txt/day").append(dayID + 1).append("/Puzzle").append(dayID + 1).append("-").append(puzzleID + 1).append("_");
-		
-		return path;
-	}
+	protected abstract void part1(BufferedReader in, BufferedWriter out) throws IOException;
+	protected abstract void part2(BufferedReader in, BufferedWriter out) throws IOException;
+
 	
 	private String getInputPath() {
-		return getGenericPath().append("Input.txt").toString();
+		StringBuilder path = new StringBuilder();
+		
+		path.append("src/txt/day").append(day).append("/Input.txt");
+		return path.toString();
 	}
 	
-	private String getOutputPath() {
-		return getGenericPath().append("Output.txt").toString();
+	private String getOutputPath(int part) {
+		StringBuilder path = new StringBuilder();
+		path.append("src/txt/day").append(day).append("/Output_Part").append(part + 1).append(".txt");
+		
+		return path.toString();
 	}
 	
 	private BufferedReader getInput() {
@@ -53,8 +52,8 @@ public abstract class Puzzle {
 		return in;
 	}
 	
-	private BufferedWriter getOutput() {
-		String outputPath = getOutputPath();
+	private BufferedWriter getOutput(int part) {
+		String outputPath = getOutputPath(part);
 		BufferedWriter out = null;
 		
 		try {
@@ -67,33 +66,30 @@ public abstract class Puzzle {
 		return out;
 	}
 	
-	public void run() {
+	public void run() throws IOException {
+		
+		System.out.println("Running day " + day + "... ");
+		long startTime = System.currentTimeMillis();
 		
 		BufferedReader in = getInput();
-		BufferedWriter out = getOutput();
+		BufferedWriter outPart1 = getOutput(0);
+		BufferedWriter outPart2 = getOutput(1);
 		
-		if(in == null || out == null) return;
-		
-		try {
-			compute(in, out);
-		} catch (IOException e) {
-			System.err.println("Error processing puzzle files");
-			e.printStackTrace();
+		if(in == null) {
+			System.err.println("No input found for day " + day);
 		}
 		
 		
-		try {
-			in.close();
-		} catch (IOException e) {
-			System.err.println("Error closing input file");
-			e.printStackTrace();
-		}
+		part1(in, outPart1);
+		outPart1.close();
+		in.close();
+		in = getInput();
 		
-		try {
-			out.close();
-		} catch (IOException e) {
-			System.err.println("Error closing output file");
-			e.printStackTrace();
-		}
+		part2(in, outPart2);
+		in.close();
+		outPart2.close();
+		
+		int elapsedMillis = (int) (System.currentTimeMillis() - startTime);
+		System.out.println("Day " + day + " finished in " + elapsedMillis + "ms");
 	}
 }

@@ -1,6 +1,7 @@
 package main;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -19,6 +20,7 @@ public class PuzzleReflectionFactory {
 	}
 	
 	private String[] puzzleRegistrations;
+	private int latestDay = 0;
 	
 	private PuzzleReflectionFactory(String rootPackageName) {
 		try {
@@ -81,10 +83,23 @@ public class PuzzleReflectionFactory {
 			return null;
 		}
 	}
-
-	public Puzzle getPuzzle(int id) {
+	
+	public int getLatestDay() {
+		return this.latestDay;
+	}
+	
+	public Puzzle getLatestPuzzle() {
+		return getPuzzle(latestDay);
+	}
+	
+	public Puzzle getPuzzle(int day) {
+		if(this.puzzleRegistrations[day - 1] == null) {
+			System.err.println("Cannot find day " + day + "!");
+			return null;
+		}
+		
 		try {
-			return (Puzzle) Class.forName(this.puzzleRegistrations[id]).getConstructor().newInstance();
+			return (Puzzle) Class.forName(this.puzzleRegistrations[day - 1]).getConstructor().newInstance();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -94,9 +109,17 @@ public class PuzzleReflectionFactory {
 	private void registerClasses(String[] classNames) {
 		try {
 			for (String className : classNames) {
-				System.out.println(className);
-				Puzzle puzzle = (Puzzle) Class.forName(className).getConstructor().newInstance();
-				puzzleRegistrations[puzzle.getID()] = className;
+				Class<?> c = Class.forName(className);				
+				Annotation[] annotations = c.getAnnotations();
+
+				for(Annotation annotation : annotations){
+				    if(annotation instanceof Solution){
+				    	Solution solution = (Solution) annotation;
+				    	int day = solution.day();
+						if(day > latestDay) latestDay = day;
+						puzzleRegistrations[day - 1] = className;
+				    }
+				}
 			}
 			return;
 		} catch (Exception e) {

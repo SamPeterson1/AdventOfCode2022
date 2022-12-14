@@ -5,17 +5,36 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 
 import main.Puzzle;
+import main.Solution;;
 
-public class Puzzle1_2 extends Puzzle {
+@Solution(day = 1)
+public class Day1 extends Puzzle {
 
-	private static final int ID = 1;
-	
-	public Puzzle1_2() {
-		super(ID);
+	@Override
+	protected void part1(BufferedReader in, BufferedWriter out) throws IOException {
+		String line;
+		
+		int maxCalories = 0;
+		int currentCalories = 0;
+		
+		while((line = in.readLine()) != null) {
+			if(line.equals("")) {
+				if(currentCalories > maxCalories) {
+					maxCalories = currentCalories;
+				}
+
+				currentCalories = 0;
+			} else {
+				int itemCalories = Integer.parseInt(line);
+				currentCalories += itemCalories;
+			}
+		}
+		
+		out.write(Integer.toString(maxCalories));
 	}
 
 	@Override
-	protected void compute(BufferedReader in, BufferedWriter out) throws IOException {
+	protected void part2(BufferedReader in, BufferedWriter out) throws IOException {
 		String line;
 		
 		int currentCalories = 0;
@@ -40,8 +59,6 @@ public class Puzzle1_2 extends Puzzle {
 				currentCalories += itemCalories;
 			}
 		}
-		
-		
 		
 		int top3Sum = 0;
 		for(int i = 0; i < 3; i ++)
