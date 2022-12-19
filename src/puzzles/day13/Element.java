@@ -8,37 +8,38 @@ public class Element implements Comparable<Element> {
 	public static final int EQUAL_ORDER = 0;
 	public static final int CORRECT_ORDER = -1;
 	public static final int INCORRECT_ORDER = 1;
-	
+
 	private List<Element> elements;
 	private int value;
-	
+
 	public Element(int value) {
 		this.elements = null;
 		this.value = value;
 	}
-	
+
 	public Element() {
-		this.elements = new ArrayList<Element>();
+		this.elements = new ArrayList<>();
 		this.value = -1;
 	}
-	
+
 	public void addElement(Element e) {
 		elements.add(e);
 	}
-	
+
 	private boolean isList() {
 		return (this.elements != null);
 	}
-	
+
 	public Element asList() {
 		if(isList()) return this;
-		
+
 		Element e = new Element();
 		e.addElement(new Element(this.value));
-		
+
 		return e;
 	}
-	
+
+	@Override
 	public int compareTo(Element other) {
 		if(!isList() && !other.isList()) {
 			if(this.value < other.value) {
@@ -57,10 +58,10 @@ public class Element implements Comparable<Element> {
 				Element left = this.elements.get(i);
 				Element right = other.elements.get(i);
 				int comparison = left.compareTo(right);
-				
+
 				if(comparison != EQUAL_ORDER) return comparison;
 			}
-			
+
 			if(numElementsLeft < numElementsRight) {
 				return CORRECT_ORDER;
 			} else if(numElementsLeft > numElementsRight) {

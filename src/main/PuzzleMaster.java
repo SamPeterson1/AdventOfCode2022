@@ -3,7 +3,7 @@ package main;
 import java.io.IOException;
 
 public class PuzzleMaster {
-	
+
 	public static final int NUM_PUZZLES = 50;
 	public static final int NUM_DAYS = 25;
 	public static final int PUZZLES_PER_DAY = 2;
@@ -14,7 +14,7 @@ public class PuzzleMaster {
 			runPuzzle(day);
 		}
 	}
-	
+
 	public static void runPuzzle() {
 		try {
 			PuzzleReflectionFactory.getInstance().getLatestPuzzle().run();
@@ -22,16 +22,16 @@ public class PuzzleMaster {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void runPuzzle(int id) {
 		Puzzle puzzle = PuzzleReflectionFactory.getInstance().getPuzzle(id);
 		if(puzzle == null) return;
-		
+
 		try {
 			puzzle.run();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 }
