@@ -115,28 +115,6 @@ public class Day18 extends Puzzle {
 		}
 	}
 	
-	private void printSlice(int x) {
-		for(int y = 0; y < SIZE; y ++) {
-			for(int z = 0; z < SIZE; z ++) {
-				char c = getCell(x, y, z) == null ? '.' : '#';
-				System.out.print(c);
-			}
-			System.out.println();
-		}
-		
-		System.out.println();
-		
-		for(int y = 0; y < SIZE; y ++) {
-			for(int z = 0; z < SIZE; z ++) {
-				char c = isOutside[x][y][z] ? '.' : '#';
-				System.out.print(c);
-			}
-			System.out.println();
-		}
-		
-		System.out.println("\n");
-	}
-	
 	@Override
 	protected void part1(BufferedReader in, BufferedWriter out) throws IOException {
 		readInput(in);

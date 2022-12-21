@@ -85,15 +85,6 @@ public class Day13 extends Puzzle {
 		out.write(Integer.toString(sumCorrectIndices));
 	}
 
-	private void printList(List<Integer> list) {
-		System.out.print("[");
-		for(int i = 0; i < list.size(); i ++) {
-			System.out.print(list.get(i));
-			if(i < list.size() - 1) System.out.print(", ");
-		}
-		System.out.println("]");
-	}
-
 	@Override
 	protected void part2(BufferedReader in, BufferedWriter out) throws IOException {
 		ArrayList<Element> elements = new ArrayList<Element>();

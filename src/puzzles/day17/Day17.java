@@ -3,7 +3,6 @@ package puzzles.day17;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import main.Puzzle;
 import main.Solution;

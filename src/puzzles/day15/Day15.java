@@ -3,7 +3,6 @@ package puzzles.day15;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import main.Puzzle;
 import main.Solution;
@@ -36,17 +35,6 @@ public class Day15 extends Puzzle {
 		return beaconCanExist;
 	}
 
-	private boolean distressBeaconCanExist(int x, int y) {
-		boolean distressBeaconCanExist = true;
-		for(Sensor sensor : sensors) {
-			if(!sensor.distressBeaconCanExist(x, 2000000)) {
-				distressBeaconCanExist = false;
-			}
-		}
-
-		return distressBeaconCanExist;
-	}
-
 	private int findDistressBeacon(int y) {
 		int x = 0;
 		while(x <= 4000000) {
@@ -65,10 +53,6 @@ public class Day15 extends Puzzle {
 		}
 
 		return -1;
-	}
-
-	private int getTuningFrequency(int x, int y) {
-		return 4000000 * x + y;
 	}
 
 	@Override

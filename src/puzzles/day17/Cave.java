@@ -20,6 +20,7 @@ public class Cave {
 	private int numRocksFallen;
 	private int floor = 0;
 	
+	@SuppressWarnings("unused")
 	private int cycleHash = Integer.MIN_VALUE;
 	private HashMap<Integer, Integer> states;
 	
@@ -151,6 +152,7 @@ public class Cave {
 		if(isStable()) numRocksFallen ++;
 	}
 	
+	@SuppressWarnings("unused")
 	private boolean hashState() {
 		byte[] rowHashes = new byte[5];
 		if(highestStableRow > 5) {

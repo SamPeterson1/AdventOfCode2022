@@ -1,7 +1,5 @@
 package puzzles.day18;
 
-import java.util.EnumMap;
-
 public class LavaCell {
 	
 	private boolean[] neighbors;
