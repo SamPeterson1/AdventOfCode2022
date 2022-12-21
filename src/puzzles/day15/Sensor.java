@@ -17,6 +17,10 @@ public class Sensor {
 	public static int manhattanDist(int[] a, int[] b) {
 		return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
 	}
+	
+	public static int manhattanDist(int[] a, int b1, int b2) {
+		return Math.abs(a[0] - b1) + Math.abs(a[1] - b2);
+	}
 
 	private int[] sensorPos;
 	private int[] beaconPos;
@@ -82,7 +86,7 @@ public class Sensor {
 	}
 
 	public int distanceTo(int x, int y) {
-		return manhattanDist(sensorPos, new int[] {x, y});
+		return manhattanDist(sensorPos, x, y);
 	}
 
 	private int[] parseCoordinates(String coordinates) {

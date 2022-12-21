@@ -11,7 +11,7 @@ import main.Solution;
 @Solution(day = 15)
 public class Day15 extends Puzzle {
 
-	private static final int NUM_SENSORS = 38;
+	private static final int NUM_SENSORS = 24;
 	private Sensor[] sensors;
 
 
@@ -47,50 +47,24 @@ public class Day15 extends Puzzle {
 		return distressBeaconCanExist;
 	}
 
-	private ArrayList<Sensor> getNearSensors(int y) {
-		ArrayList<Sensor> nearSensors = new ArrayList<>();
-		for(Sensor sensor : sensors) {
-			int[] sensorPos = sensor.getSensorPos();
-			int dist = Math.abs(sensorPos[1]) - y;
-
-			if(dist <= sensor.getCoveredRadius()) {
-				nearSensors.add(sensor);
-			}
-		}
-
-		return nearSensors;
-	}
-
-	private Sensor findFurthestInRangeSensor(int x, int y, ArrayList<Sensor> sensors) {
-		int largestDist = -1;
-		Sensor closestSensor = null;
-
-		for(Sensor sensor : sensors) {
-			int dist = sensor.distanceTo(x, y);
-			if(dist <= sensor.getCoveredRadius() && dist > largestDist) {
-				largestDist = dist;
-				closestSensor = sensor;
-			}
-		}
-
-		return closestSensor;
-	}
-
 	private int findDistressBeacon(int y) {
-		ArrayList<Sensor> nearSensors = getNearSensors(y);
-
 		int x = 0;
 		while(x <= 4000000) {
-			Sensor furthestInRange = findFurthestInRangeSensor(x, y, nearSensors);
-			if(furthestInRange == null) {
-				return x;
+			boolean foundSensor = false;
+			for(int i = 0; i < sensors.length; i ++) {
+				Sensor sensor = sensors[i];
+				
+				if(sensor.inRange(x, y)) {
+					x = sensor.getRightmostCoveredXPosition(y) + 1;
+					foundSensor = true;
+					break;
+				}
 			}
-			nearSensors.remove(furthestInRange);
-
-			x = furthestInRange.getRightmostCoveredXPosition(y) + 1;
+			
+			if(!foundSensor) return x;
 		}
 
-		return Integer.MAX_VALUE;
+		return -1;
 	}
 
 	private int getTuningFrequency(int x, int y) {
@@ -116,17 +90,16 @@ public class Day15 extends Puzzle {
 	}
 
 	@Override
-	protected void part2(BufferedReader in, BufferedWriter out) throws IOException {
+	protected void part2(BufferedReader in, BufferedWriter out) throws IOException {		
 		loadSensors(in);
-
+		
 		for(int y = 0; y <= 4000000; y ++) {
 			int position = findDistressBeacon(y);
-			if(position != Integer.MAX_VALUE) {
+			if(position != -1) {
 				out.write("x: " + position + ", y: " + y);
 				break;
 			}
 		}
-
 	}
 
 }
