@@ -6,32 +6,32 @@ import java.util.ArrayList;
 
 public class Board {
 
-	private static final int WIDTH = 150;
-	private static final int HEIGHT = 200;
+	public static final int WIDTH = 150;
+	public static final int HEIGHT = 200;
 	
-	private static final int EMPTY = 0;
-	private static final int OPEN = 1;
-	private static final int WALL = 2;
+	public static final int CUBE_SIZE = 50;
 	
-	private static final int CW = 1;
-	private static final int CCW = -1;
-	private static final int NO_TURN = 0;
+	public static final int EMPTY = 0;
+	public static final int OPEN = 1;
+	public static final int WALL = 2;
 	
-	/*
-	private static final int RIGHT = 0;
-	private static final int DOWN = 1;
-	private static final int LEFT = 2;
-	private static final int UP = 3;
-	*/
+	public static final int CW = 1;
+	public static final int CCW = -1;
+	public static final int NO_TURN = 0;
 	
-	private static final int[][] DIRECTIONS = new int[][] {
+	public static final int RIGHT = 0;
+	public static final int DOWN = 1;
+	public static final int LEFT = 2;
+	public static final int UP = 3;
+	
+	public static final int[][] DIRECTIONS = new int[][] {
 		{0, 1},
 		{1, 0},
 		{0, -1},
 		{-1, 0}
 	};
-	
-	private class Instruction {
+
+	public class Instruction {
 		public final int distance;
 		public final int turn;
 		
@@ -41,11 +41,10 @@ public class Board {
 		}
 	}
 	
-	private int[][] board;
-	private ArrayList<Instruction> instructions;
+	public int[][] board;
+	public ArrayList<Instruction> instructions;
 	
-	private int row, col;
-	private int facing;
+	
 	
 	public Board(BufferedReader in) throws IOException {
 		parseBoard(in);
@@ -53,8 +52,6 @@ public class Board {
 		in.readLine();
 		
 		parseInstructions(in);
-		
-		this.col = findStartingCol();
 	}
 	
 	private void parseBoard(BufferedReader in) throws IOException {
@@ -64,7 +61,7 @@ public class Board {
 			char[] line = in.readLine().toCharArray();
 			for(int col = 0; col < line.length; col ++) {
 				board[row][col] = parseBoardChar(line[col]);
-			}             
+			}
 		}
 	}
 	
@@ -88,14 +85,6 @@ public class Board {
 		int distance = Integer.parseInt(currentNum.toString());
 		instructions.add(new Instruction(distance, NO_TURN));
 	}
-	
-	private int findStartingCol() {
-		for(int col = 0; col < WIDTH; col ++) {
-			if(board[0][col] == OPEN) return col;
-		}
-		
-		return -1;
-	}
 
 	private int parseTurnChar(char c) {
 		if(c == 'R') return CW;
@@ -112,76 +101,18 @@ public class Board {
 		return -1;
 	}
 	
-	private boolean inBounds(int row, int col) {
+	public int findStartingCol() {
+		for(int col = 0; col < WIDTH; col ++) {
+			if(board[0][col] == OPEN) return col;
+		}
+		
+		return -1;
+	}
+	
+	public boolean inBounds(int row, int col) {
 		if(row < 0 || row >= HEIGHT || col < 0 || col >= WIDTH) return false;
 		return board[row][col] != EMPTY;
 	}
 	
-	private void move(int moveDistance) {
-		int[] direction = DIRECTIONS[facing];
-		
-		//System.out.println("Start: " + row + " " + col);
-		
-		int facingEdgeRow = row, facingEdgeCol = col;
-		
-		while(inBounds(facingEdgeRow, facingEdgeCol)) {
-			facingEdgeRow += direction[0];
-			facingEdgeCol += direction[1];
-		}
-		
-		facingEdgeRow -= direction[0];
-		facingEdgeCol -= direction[1];
-		
-		int oppositeEdgeRow = row, oppositeEdgeCol = col;
-		
-		while(inBounds(oppositeEdgeRow, oppositeEdgeCol)) {
-			oppositeEdgeRow -= direction[0];
-			oppositeEdgeCol -= direction[1];
-		}
-		
-		oppositeEdgeRow += direction[0];
-		oppositeEdgeCol += direction[1];
-		
-		//System.out.println("Facing edge: " + facingEdgeRow + " " + facingEdgeCol);
-		//System.out.println("Opposite edge: " + oppositeEdgeRow + " " + oppositeEdgeCol);
-		
-		for(int i = 0; i < moveDistance; i ++) {
-			int newRow, newCol;
-			if(row == facingEdgeRow && col == facingEdgeCol) {
-				newRow = oppositeEdgeRow;
-				newCol = oppositeEdgeCol;
-			} else {
-				newRow = row + direction[0];
-				newCol = col + direction[1];
-			}
-			
-			if(board[newRow][newCol] == WALL) {
-				break;
-			} else {
-				row = newRow;
-				col = newCol;
-			}
-		}
-		
-		System.out.println(row + " " + col + " " + facing);
-	}
-	
-	private void turn(int turn) {
-		facing += turn;
-		facing = Math.floorMod(facing, 4);
-	}
-	
-	private void runPath() {
-		for(Instruction instruction : instructions) {
-			move(instruction.distance);
-			turn(instruction.turn);
-		}
-	}
 
-	public int getPassword() {
-		runPath();
-		
-		return 1000 * (row + 1) + 4 * (col + 1) + facing;
-	}
-	
 }
