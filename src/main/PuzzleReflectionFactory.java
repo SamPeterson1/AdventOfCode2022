@@ -27,7 +27,7 @@ public class PuzzleReflectionFactory {
 			String[] classNames;
 			this.puzzleRegistrations = new String[PuzzleMaster.NUM_PUZZLES];
 
-			for(int day = 0; day < PuzzleMaster.NUM_DAYS; day ++) {
+			for(int day = 1; day <= PuzzleMaster.NUM_DAYS; day ++) {
 				String packageName = new StringBuilder(ROOT_PACKAGE_NAME).append(".day").append(day).toString();
 				classNames = this.getClasses(packageName);
 				this.registerClasses(classNames);
